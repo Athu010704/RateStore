@@ -6,17 +6,17 @@ import { motion } from 'framer-motion';
 
 const StatCard = ({ icon: Icon, label, value, color }) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="card-base p-6 hover:shadow-elevated transition-all duration-300 group"
   >
     <div className="flex items-center justify-between">
-      <div>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{label}</p>
-        <p className="text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
+      <div className="flex-1">
+        <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">{label}</p>
+        <p className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">{value}</p>
       </div>
-      <div className={`p-3 rounded-lg ${color}`}>
-        <Icon className="w-6 h-6 text-white" />
+      <div className={`p-4 rounded-xl ${color} shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+        <Icon className="w-8 h-8 text-white" />
       </div>
     </div>
   </motion.div>
@@ -49,14 +49,18 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-12"
+      >
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
           {isAdmin ? 'Admin Dashboard' : isStoreOwner ? 'Store Owner Dashboard' : 'My Dashboard'}
         </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Welcome back! Here's what's happening.
+        <p className="text-lg text-gray-600 dark:text-gray-400">
+          Welcome back! Here's what's happening with your account.
         </p>
-      </div>
+      </motion.div>
 
       {isAdmin && adminData && (
         <div className="space-y-8">
@@ -65,19 +69,19 @@ const Dashboard = () => {
               icon={FiUsers}
               label="Total Users"
               value={adminData.data.overview.totalUsers}
-              color="bg-blue-500"
+              color="bg-gradient-to-br from-blue-500 to-blue-600"
             />
             <StatCard
               icon={FiShoppingBag}
               label="Total Stores"
               value={adminData.data.overview.totalStores}
-              color="bg-green-500"
+              color="bg-gradient-to-br from-emerald-500 to-emerald-600"
             />
             <StatCard
               icon={FiStar}
               label="Total Ratings"
               value={adminData.data.overview.totalRatings}
-              color="bg-yellow-500"
+              color="bg-gradient-to-br from-amber-500 to-amber-600"
             />
             <StatCard
               icon={FiTrendingUp}
@@ -85,43 +89,54 @@ const Dashboard = () => {
               value={adminData.data.overview.totalRatings > 0 
                 ? (adminData.data.ratingDistribution.reduce((sum, r) => sum + r.star * r.count, 0) / adminData.data.overview.totalRatings).toFixed(1)
                 : '0'}
-              color="bg-purple-500"
+              color="bg-gradient-to-br from-primary-500 to-primary-600"
             />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Users by Role</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 dark:text-gray-400">Admin</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">{adminData.data.overview.usersByRole.ADMIN}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 dark:text-gray-400">Store Owners</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">{adminData.data.overview.usersByRole.STORE_OWNER}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 dark:text-gray-400">Users</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">{adminData.data.overview.usersByRole.USER}</span>
-                </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="card-base p-6"
+            >
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Users by Role</h3>
+              <div className="space-y-4">
+                {[
+                  { label: 'Admin', value: adminData.data.overview.usersByRole.ADMIN, color: 'from-purple-500 to-purple-600' },
+                  { label: 'Store Owners', value: adminData.data.overview.usersByRole.STORE_OWNER, color: 'from-blue-500 to-blue-600' },
+                  { label: 'Users', value: adminData.data.overview.usersByRole.USER, color: 'from-emerald-500 to-emerald-600' },
+                ].map(({ label, value, color }) => (
+                  <div key={label} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${color}`} />
+                      <span className="text-gray-600 dark:text-gray-400 font-medium">{label}</span>
+                    </div>
+                    <span className="text-lg font-bold text-gray-900 dark:text-white">{value}</span>
+                  </div>
+                ))}
               </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Rated Stores</h3>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="card-base p-6"
+            >
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Top Rated Stores</h3>
               <div className="space-y-3">
                 {adminData.data.topRatedStores.slice(0, 5).map((store) => (
-                  <div key={store.id} className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400 truncate">{store.storeName}</span>
-                    <div className="flex items-center space-x-2">
-                      <FiStar className="w-4 h-4 text-yellow-500" />
-                      <span className="font-semibold text-gray-900 dark:text-white">{store.avgRating}</span>
+                  <div key={store.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <span className="text-gray-600 dark:text-gray-400 font-medium truncate">{store.storeName}</span>
+                    <div className="flex items-center space-x-2 bg-amber-50 dark:bg-amber-900/20 px-2.5 py-1 rounded-lg">
+                      <FiStar className="w-4 h-4 text-amber-500" />
+                      <span className="text-sm font-bold text-amber-600 dark:text-amber-400">{store.avgRating}</span>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       )}
@@ -133,39 +148,43 @@ const Dashboard = () => {
               icon={FiShoppingBag}
               label="My Stores"
               value={ownerData.data.overview.totalStores}
-              color="bg-green-500"
+              color="bg-gradient-to-br from-emerald-500 to-emerald-600"
             />
             <StatCard
               icon={FiStar}
               label="Total Ratings"
               value={ownerData.data.overview.totalRatings}
-              color="bg-yellow-500"
+              color="bg-gradient-to-br from-amber-500 to-amber-600"
             />
             <StatCard
               icon={FiTrendingUp}
               label="Avg Rating"
               value={ownerData.data.overview.overallAvgRating}
-              color="bg-purple-500"
+              color="bg-gradient-to-br from-primary-500 to-primary-600"
             />
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Store Performance</h3>
-            <div className="space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="card-base p-6"
+          >
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Store Performance</h3>
+            <div className="space-y-3">
               {ownerData.data.stores.map((store) => (
-                <div key={store.storeId} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div key={store.storeId} className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                   <div className="flex justify-between items-center mb-2">
-                    <h4 className="font-medium text-gray-900 dark:text-white">{store.storeName}</h4>
-                    <div className="flex items-center space-x-1">
-                      <FiStar className="w-4 h-4 text-yellow-500" />
-                      <span className="font-semibold text-gray-900 dark:text-white">{store.avgRating}</span>
+                    <h4 className="font-semibold text-gray-900 dark:text-white">{store.storeName}</h4>
+                    <div className="flex items-center space-x-1 bg-amber-50 dark:bg-amber-900/20 px-2.5 py-1 rounded-lg">
+                      <FiStar className="w-4 h-4 text-amber-500" />
+                      <span className="text-sm font-bold text-amber-600 dark:text-amber-400">{store.avgRating}</span>
                     </div>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">{store.totalRatings} ratings</p>
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -176,30 +195,37 @@ const Dashboard = () => {
               icon={FiStar}
               label="Ratings Given"
               value={userData.data.stats.totalRatings}
-              color="bg-yellow-500"
+              color="bg-gradient-to-br from-amber-500 to-amber-600"
             />
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recently Rated Stores</h3>
-            <div className="space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="card-base p-6"
+          >
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Recently Rated Stores</h3>
+            <div className="space-y-3">
               {userData.data.ratedStores.length > 0 ? (
                 userData.data.ratedStores.map((item) => (
-                  <div key={item.storeId} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div key={item.storeId} className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                     <div className="flex justify-between items-center">
-                      <h4 className="font-medium text-gray-900 dark:text-white">{item.storeName}</h4>
-                      <div className="flex items-center space-x-1">
-                        <FiStar className="w-4 h-4 text-yellow-500" />
-                        <span className="font-semibold text-gray-900 dark:text-white">{item.rating}</span>
+                      <h4 className="font-semibold text-gray-900 dark:text-white">{item.storeName}</h4>
+                      <div className="flex items-center space-x-1 bg-amber-50 dark:bg-amber-900/20 px-2.5 py-1 rounded-lg">
+                        <FiStar className="w-4 h-4 text-amber-500" />
+                        <span className="text-sm font-bold text-amber-600 dark:text-amber-400">{item.rating}</span>
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-gray-500 dark:text-gray-400">No ratings yet. Start rating stores!</p>
+                <div className="text-center py-8">
+                  <FiStar className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+                  <p className="text-gray-500 dark:text-gray-400">No ratings yet. Start rating stores!</p>
+                </div>
               )}
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>

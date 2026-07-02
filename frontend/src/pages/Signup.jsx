@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useForm } from 'react-hook-form';
-import { FiMail, FiLock, FiEye, FiEyeOff, FiUser, FiMapPin } from 'react-icons/fi';
+import { FiMail, FiLock, FiEye, FiEyeOff, FiUser, FiMapPin, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 
 const Signup = () => {
@@ -31,30 +31,38 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4 py-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-          <div className="text-center mb-8">
+        <div className="card-premium p-8 space-y-8">
+          <motion.div 
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            className="text-center"
+          >
+            <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-elevated">
+              <FiUser className="w-8 h-8 text-white" />
+            </div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               Create Account
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Join the Store Rating community
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Join the RateStore community
             </p>
-          </div>
+          </motion.div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Full Name (20-60 characters)
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2.5">
+                Full Name
               </label>
               <div className="relative">
-                <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
                   {...register('fullName', {
@@ -68,21 +76,21 @@ const Signup = () => {
                       message: 'Full name must not exceed 60 characters',
                     },
                   })}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  className="input-base pl-12"
                   placeholder="John Doe Smith"
                 />
               </div>
               {errors.fullName && (
-                <p className="mt-1 text-sm text-red-600">{errors.fullName.message}</p>
+                <p className="mt-2 text-sm font-medium text-red-600 dark:text-red-400">{errors.fullName.message}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Email
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2.5">
+                Email Address
               </label>
               <div className="relative">
-                <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="email"
                   {...register('email', {
@@ -92,21 +100,21 @@ const Signup = () => {
                       message: 'Invalid email address',
                     },
                   })}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  className="input-base pl-12"
                   placeholder="you@example.com"
                 />
               </div>
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                <p className="mt-2 text-sm font-medium text-red-600 dark:text-red-400">{errors.email.message}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Password (8-16 chars, 1 uppercase, 1 number, 1 special)
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2.5">
+                Password
               </label>
               <div className="relative">
-                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   {...register('password', {
@@ -124,28 +132,28 @@ const Signup = () => {
                       message: 'Password must contain uppercase, number, and special character',
                     },
                   })}
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  className="input-base pl-12 pr-12"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 >
                   {showPassword ? <FiEyeOff className="w-5 h-5" /> : <FiEye className="w-5 h-5" />}
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                <p className="mt-2 text-sm font-medium text-red-600 dark:text-red-400">{errors.password.message}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Address (optional, max 400 characters)
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2.5">
+                Address (optional)
               </label>
               <div className="relative">
-                <FiMapPin className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+                <FiMapPin className="absolute left-4 top-3 text-gray-400 w-5 h-5" />
                 <textarea
                   {...register('address', {
                     maxLength: {
@@ -154,19 +162,19 @@ const Signup = () => {
                     },
                   })}
                   rows={3}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:text-white resize-none"
+                  className="input-base pl-12"
                   placeholder="123 Main St, City, Country"
                 />
               </div>
               {errors.address && (
-                <p className="mt-1 text-sm text-red-600">{errors.address.message}</p>
+                <p className="mt-2 text-sm font-medium text-red-600 dark:text-red-400">{errors.address.message}</p>
               )}
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="w-full btn-primary flex justify-center items-center space-x-2 mt-6"
             >
               {isLoading ? (
                 <motion.div
@@ -175,17 +183,22 @@ const Signup = () => {
                   transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                 />
               ) : (
-                'Create Account'
+                <>
+                  <span>Create Account</span>
+                  <FiArrowRight className="w-5 h-5" />
+                </>
               )}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
-            Already have an account?{' '}
-            <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium">
-              Sign in
-            </Link>
-          </p>
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+            <p className="text-center text-gray-600 dark:text-gray-400 text-sm">
+              Already have an account?{' '}
+              <Link to="/login" className="font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
+                Sign in
+              </Link>
+            </p>
+          </div>
         </div>
       </motion.div>
     </div>
